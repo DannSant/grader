@@ -15,6 +15,11 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 
 //Rutas
 import {app_routing} from './app.routes';
+import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { MyExamsComponent } from './pages/exams/detail/my-exams/my-exams.component';
+import { SharedExamsComponent } from './pages/exams/detail/shared-exams/shared-exams.component';
+import { NewExamComponent } from './pages/exams/detail/new-exam/new-exam.component';
+import { ReportsComponent } from './pages/exams/detail/reports/reports.component';
 
 
 @NgModule({
@@ -23,7 +28,12 @@ import {app_routing} from './app.routes';
     HomeComponent,
     AboutComponent,
     ExamsComponent,
-    NavbarComponent
+    NavbarComponent,
+    SidebarComponent,
+    MyExamsComponent,
+    SharedExamsComponent,
+    NewExamComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,23 @@
+<table class="table" style="width:100%">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Examen</th>
+      <th scope="col">Descripcion</th>
+      <th scope="col" width="10%">Preguntas aleatorias</th>
+      <th scope="col">Controles</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let exam of myExams">
+      <td>{{exam.name}}</td>
+      <td>{{exam.desc}}</td>
+      <td>
+         <input type="checkbox" aria-label="Checkbox for following text input" [value]="exam.shuffle">
+      </td>
+      <td>
+        <button type="button" class="btn btn-success">Editar</button>
+        <button type="button" class="btn btn-info">Liga</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
