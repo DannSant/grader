@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import {FormsModule,ReactiveFormsModule} from '@angular/forms'
 
 
 //Componentes
@@ -12,6 +13,7 @@ import { ExamsComponent } from './pages/exams/exams.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
 //Servicios
+import {ExamsService} from './services/exams.service'
 
 //Rutas
 import {app_routing} from './app.routes';
@@ -38,9 +40,13 @@ import { ReportsComponent } from './pages/exams/detail/reports/reports.component
   imports: [
     BrowserModule,
     app_routing,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    ExamsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

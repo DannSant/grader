@@ -1,3 +1,119 @@
-<p>
-  new-exam works!
-</p>
+<h4>Nuevo Examen</h4>
+<hr>
+<form [formGroup]="forma">
+
+  <div class="form-group row" [ngClass]="{'has-danger': !forma.get('name').valid && !forma.get('name').pristine}">
+    <label class="col-2 col-form-label">Nombre</label>
+    <div class="col-8">
+
+      <input class="form-control"
+             type="text"
+             placeholder="Nombre"
+             formControlName="name">
+      <div class="alert alert-danger form-control-feedback" *ngIf="forma.get('name').errors?.required && !forma.get('name').pristine">
+       El nombre es requerido
+      </div>
+      <div class="alert alert-danger form-control-feedback" *ngIf="forma.get('name').errors?.minlength && !forma.get('name').pristine">
+       El nombre es de {{forma.get('name').errors?.minlength.requiredLength}} caracteres al menos
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-2 col-form-label">Descripcion</label>
+    <div class="col-8">
+
+      <input class="form-control"
+             type="text"
+             placeholder="Descripcion"
+             formControlName="desc">
+     <div class="alert alert-danger form-control-feedback" *ngIf="forma.get('desc').errors?.required && !forma.get('desc').pristine">
+      La descripcion es requerida
+     </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-2 col-form-label">Aleatorias</label>
+    <div class="col-md-8">
+          <input type="checkbox" class="form-control"  checked autocomplete="off" formControlName="shuffle">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="dropdown col-2 col-form-label">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Permisos
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        <button class="dropdown-item" type="button" (click)="setViewer('Todos')">Todos</button>
+        <button class="dropdown-item" type="button" (click)="setViewer('Solo yo')">Solo yo</button>
+        <button class="dropdown-item" type="button" (click)="setViewer('Grupo especifico')">Grupo especifico </button>
+      </div>
+    </div>
+
+    <!-- <label class="col-2 col-form-label">Descripcion</label> -->
+    <div class="col-8">
+      <input class="form-control"
+             readonly
+             type="text"
+
+             formControlName="viewer">
+     <div class="alert alert-danger form-control-feedback" *ngIf="forma.get('viewer').errors?.required && !forma.get('viewer').pristine">
+      Debes especificar permisos para este examen
+     </div>
+    </div>
+  </div>
+
+  {{forma.valid}}
+  <br>
+  {{forma.status}}
+
+</form>
+<hr>
+<h3>Preguntas</h3>
+
+<button type="button" class="btn btn-success">Nueva pregunta</button>
+<div class="row">
+
+  <label class="col-2 col-form-label">Descripcion</label>
+  <div class="col-10">
+    <input class="form-control" type="text" name="desc" placeholder="Escriba la pregunta aqui">
+  </div>
+
+  <label class="col-2 col-form-label">Orden</label>
+  <div class="col-10">
+    <input class="form-control" type="number" name="orderCode">
+  </div>
+
+  <label class="col-2 col-form-label">Tipo de pregunta</label>
+  <div class="col-10">
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-secondary">Abierta</button>
+      <button type="button" class="btn btn-secondary">Opcion Multiple</button>
+      <button type="button" class="btn btn-secondary">Falso-Verdadero</button>
+    </div>
+  </div>
+
+  <label class="col-2 col-form-label">Respuestas</label>
+  <div class="col-10">
+    <input type="text" class="form-control">
+      <button type="button" class="btn btn-primary" (click)="addQuestion()">Agregar respuesta</button>
+  </div>
+
+  <label class="col-2 col-form-label">Palabras clave</label>
+  <div class="col-10">
+    <input type="text" class="form-control">
+      <button type="button" class="btn btn-primary" (click)="addKeyword()">Agregar palabras clave</button>
+  </div>
+
+  <label class="col-2 col-form-label">Respuesta Correcta</label>
+  <div class="col-10">
+    <input type="number" class="form-control">
+  </div>
+</div>
+<hr>
+
+<button type="button" class="btn btn-primary btn-block" (click)="guardarCambios()">
+  Guardar
+</button>

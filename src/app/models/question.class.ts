@@ -1,6 +1,6 @@
 export class Question{
-  orderCode:number;
   desc:string;
+  orderCode:number;  
   type:string;
   answers:string[];
   correctAnswerIdx:number;
