@@ -6,7 +6,7 @@
 #sidebar {
   min-width: 250px;
   max-width: 250px;
-  min-height: 100vh;
+  min-height: 200vh;
   background: #007bff;
   color: #fff;
   transition: all 0.3s;

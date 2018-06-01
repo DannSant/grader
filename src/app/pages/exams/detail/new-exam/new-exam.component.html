@@ -65,51 +65,71 @@
     </div>
   </div>
 
-  {{forma.valid}}
+  <!-- {{forma.valid}}
   <br>
-  {{forma.status}}
+  {{forma.status}} -->
 
 </form>
 <hr>
 <h3>Preguntas</h3>
 
-<button type="button" class="btn btn-success">Nueva pregunta</button>
+<button type="button" class="btn btn-success" (click)="addQuestion()">Nueva pregunta</button>
 <div class="row">
 
-  <label class="col-2 col-form-label">Descripcion</label>
-  <div class="col-10">
-    <input class="form-control" type="text" name="desc" placeholder="Escriba la pregunta aqui">
-  </div>
-
-  <label class="col-2 col-form-label">Orden</label>
-  <div class="col-10">
-    <input class="form-control" type="number" name="orderCode">
-  </div>
-
-  <label class="col-2 col-form-label">Tipo de pregunta</label>
-  <div class="col-10">
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-secondary">Abierta</button>
-      <button type="button" class="btn btn-secondary">Opcion Multiple</button>
-      <button type="button" class="btn btn-secondary">Falso-Verdadero</button>
+  <div class="col-md-8">
+    <label class="col-2 col-form-label">Descripcion</label>
+    <div class="col-10">
+      <input class="form-control" type="text" name="desc" placeholder="Escriba la pregunta aqui" [(ngModel)]="questionDesc">
     </div>
+
+    <label class="col-2 col-form-label">Orden</label>
+    <div class="col-10">
+      <input class="form-control" type="number" name="orderCode" [(ngModel)]="questionOrderCode">
+    </div>
+
+    <label class="col-2 col-form-label">Tipo de pregunta</label>
+    <div class="col-10">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary" (click)="questionType=1">Abierta</button>
+        <button type="button" class="btn btn-secondary" (click)="questionType=2">Opcion Multiple</button>
+        <button type="button" class="btn btn-secondary" (click)="questionType=3">Falso-Verdadero</button>
+      </div>
+    </div>
+
+    <label class="col-2 col-form-label" *ngIf="questionType==2">Respuestas</label>
+    <div class="col-10" *ngIf="questionType==2">
+      <input type="text" class="form-control">
+        <button type="button" class="btn btn-primary" (click)="addQuestion()">Agregar respuesta</button>
+    </div>
+
+    <label class="col-2 col-form-label" *ngIf="questionType==1">Palabras clave</label>
+    <div class="col-10" *ngIf="questionType==1">
+      <input type="text" class="form-control">
+        <button type="button" class="btn btn-primary" (click)="addKeyword()">Agregar palabras clave</button>
+    </div>
+
+    <label class="col-2 col-form-label" *ngIf="questionType==2 || questionType==3">Respuesta Correcta</label>
+    <div class="col-10" *ngIf="questionType==2 || questionType==3">
+      <input type="number" class="form-control">
+    </div>
+
   </div>
 
-  <label class="col-2 col-form-label">Respuestas</label>
-  <div class="col-10">
-    <input type="text" class="form-control">
-      <button type="button" class="btn btn-primary" (click)="addQuestion()">Agregar respuesta</button>
-  </div>
-
-  <label class="col-2 col-form-label">Palabras clave</label>
-  <div class="col-10">
-    <input type="text" class="form-control">
-      <button type="button" class="btn btn-primary" (click)="addKeyword()">Agregar palabras clave</button>
-  </div>
-
-  <label class="col-2 col-form-label">Respuesta Correcta</label>
-  <div class="col-10">
-    <input type="number" class="form-control">
+  <div class="col-md-4">
+    <table class="table table-hover">
+  <thead>
+    <tr>
+      <th class="table-primary" scope="col">#</th>
+      <th class="table-primary" scope="col">Pregunta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let question of questions">
+      <th scope="row">{{question.orderCode}}</th>
+      <td>{{question.desc}}</td>
+    </tr>
+  </tbody>
+</table>
   </div>
 </div>
 <hr>
