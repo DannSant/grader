@@ -13,11 +13,7 @@ import {FormControl,FormGroup, Validators,FormArray} from '@angular/forms'
 export class NewExamComponent implements OnInit {
   forma:FormGroup;
 
-  //Preguntas
   questions:any[]=[];
-  questionDesc:string;
-  questionOrderCode:number;
-  questionType:number;
 
 
   constructor(private _es:ExamsService) {
@@ -54,23 +50,7 @@ export class NewExamComponent implements OnInit {
     this.forma.get('viewer').setValue(viewer);
   }
 
-  addQuestion(){
-    let newQuestion:any = {};
-    newQuestion.desc=this.questionDesc;
-    newQuestion.orderCode=this.questionOrderCode;
-    newQuestion.type=this.questionType;
 
-    this.questions.push(newQuestion);
-
-    this.clearQuestionForm();
-
-  }
-
-  clearQuestionForm(){
-      this.questionDesc="";
-      this.questionOrderCode=0;
-      this.questionType=0;
-  }
 
 
 

@@ -22,6 +22,7 @@ import { MyExamsComponent } from './pages/exams/detail/my-exams/my-exams.compone
 import { SharedExamsComponent } from './pages/exams/detail/shared-exams/shared-exams.component';
 import { NewExamComponent } from './pages/exams/detail/new-exam/new-exam.component';
 import { ReportsComponent } from './pages/exams/detail/reports/reports.component';
+import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ReportsComponent } from './pages/exams/detail/reports/reports.component
     MyExamsComponent,
     SharedExamsComponent,
     NewExamComponent,
-    ReportsComponent
+    ReportsComponent,
+    AddQuestionComponent
   ],
   imports: [
     BrowserModule,
