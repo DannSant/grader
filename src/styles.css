@@ -16,6 +16,16 @@
 
 .largerCheckbox
 {
-width: 30px;
-height: 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.selectedButton {
+  height: 50px;
+}
+
+.buttons-together{
+   left: 1px;
+   right: 1px;
+   margin: 1px;
 }

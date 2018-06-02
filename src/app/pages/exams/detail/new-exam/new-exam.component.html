@@ -85,4 +85,4 @@
 </div>
 <hr>
 
-<app-add-question></app-add-question>
+<app-add-question (addQuestionEvent)="updateQuestionsArray($event)" (deleteQuestionEvent)="deleteQuestion($event)"></app-add-question>

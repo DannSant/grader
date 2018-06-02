@@ -1,6 +1,8 @@
 <h3>Preguntas</h3>
 
-<button type="button" class="btn btn-success" (click)="addQuestion()">Nueva pregunta</button>
+<button type="button" class="btn btn-success" (click)="addQuestion()" *ngIf="!isEditing">Nueva pregunta</button>
+<button type="button" class="btn btn-info" (click)="editQuestion()" *ngIf="isEditing">Actualizar pregunta</button>
+<button type="button" class="btn btn-danger" (click)="clearQuestionForm()" *ngIf="isEditing">Cancelar</button>
 
 <div class="alert alert-danger form-control-feedback" *ngIf="!validForm">
   {{invalidMsg}}
@@ -20,11 +22,11 @@
 
     <label class="col-2 col-form-label">Tipo de pregunta</label>
     <div class="col-10">
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary" (click)="setQuestionType(1)">Abierta</button>
-        <button type="button" class="btn btn-secondary" (click)="setQuestionType(2)">Opcion Multiple</button>
-        <button type="button" class="btn btn-secondary" (click)="setQuestionType(3)">Falso-Verdadero</button>
-      </div>
+     <div class="buttons-together">
+        <button type="button" class="btn btn-secondary buttons-together" (click)="setQuestionType(1)" [ngClass]="{'selectedButton': questionType==1}">Abierta</button>
+        <button type="button" class="btn btn-secondary buttons-together" (click)="setQuestionType(2)"  [ngClass]="{'selectedButton': questionType==2}">Opcion Multiple</button>
+        <button type="button" class="btn btn-secondary buttons-together" (click)="setQuestionType(3)"  [ngClass]="{'selectedButton': questionType==3}">Falso-Verdadero</button>
+       </div>
     </div>
 
     <hr>
@@ -49,7 +51,9 @@
               <button type="button" class="btn btn-info" (click)="setAsCorrectAnswer(i)">
                 <i class="fas fa-check"></i>
               </button>
-              <button type="button" class="btn btn-danger" (click)="removeAnswer(i)"><i class="fas fa-times"></i></button>
+              <button type="button" class="btn btn-danger" (click)="removeAnswer(i)">
+                <i class="fas fa-times"></i>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -83,7 +87,7 @@
     <div class="answers-border col-10" *ngIf="questionType==3">
       <label class="col-2 col-form-label">Respuesta Correcta</label>
       <div class="col-10">
-        <input type="checkbox" class="form-control largerCheckbox">
+        <input [(ngModel)]="booleanCorrectAnswer" type="checkbox" class="form-control largerCheckbox">
       </div>
     </div>
 
@@ -96,12 +100,21 @@
     <tr>
       <th class="table-primary" scope="col">#</th>
       <th class="table-primary" scope="col">Pregunta</th>
+      <th class="table-primary" scope="col"></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let question of questions">
+    <tr *ngFor="let question of questions;let i=index">
       <th scope="row">{{question.orderCode}}</th>
       <td>{{question.desc}}</td>
+      <td>
+        <button type="button" class="btn btn-info" (click)="setFormForUpdate(i)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">
+          <i class="fas fa-times"></i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

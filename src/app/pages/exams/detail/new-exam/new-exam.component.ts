@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import {Question} from '../../../../models/index.classes';
 import {ExamsService} from '../../../../services/exams.service';
 
 import {FormControl,FormGroup, Validators,FormArray} from '@angular/forms'
@@ -13,7 +13,7 @@ import {FormControl,FormGroup, Validators,FormArray} from '@angular/forms'
 export class NewExamComponent implements OnInit {
   forma:FormGroup;
 
-  questions:any[]=[];
+  questions:Question[]=[];
 
 
   constructor(private _es:ExamsService) {
@@ -33,6 +33,8 @@ export class NewExamComponent implements OnInit {
     });
   }
 
+  ngOnInit() {}
+
   guardarCambios(){
     if (!this.forma.valid){
       console.log("Hay datos aun por completar");
@@ -50,11 +52,22 @@ export class NewExamComponent implements OnInit {
     this.forma.get('viewer').setValue(viewer);
   }
 
+  updateQuestionsArray(obj){    
+    let idx = obj.idx;
+    if(idx<0){
+      this.questions.push(obj.question);
+    }else{
+      this.questions[idx]=obj.question;
+    }
 
-
-
-
-  ngOnInit() {
   }
+
+  deleteQuestion(idx){
+      this.questions.splice(idx,1);
+  }
+
+
+
+
 
 }
