@@ -13,7 +13,10 @@ export class MyExamsComponent implements OnInit {
   myExams:Exam[] =[];
 
   constructor(private _es:ExamsService) {
-    this.myExams = this._es.myExams;
+    this._es.loadExams().subscribe((data)=>{
+      this.myExams = this._es.myExams;
+    });
+
   }
 
   ngOnInit() {

@@ -3,6 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms'
+import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
 
 
 //Componentes
@@ -24,6 +30,9 @@ import { NewExamComponent } from './pages/exams/detail/new-exam/new-exam.compone
 import { ReportsComponent } from './pages/exams/detail/reports/reports.component';
 import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question.component';
 
+//Archivos
+import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +53,12 @@ import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question
     app_routing,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule,
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule
   ],
   providers: [
     ExamsService

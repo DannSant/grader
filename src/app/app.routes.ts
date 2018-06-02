@@ -15,7 +15,7 @@ const app_routes: Routes = [
     children:[
       { path: 'my-exams', component: MyExamsComponent },
       { path: 'shared-exams', component: SharedExamsComponent },
-      { path: 'new-exam', component: NewExamComponent },
+      { path: 'new-exam/:id', component: NewExamComponent },
       { path: 'reports', component: ReportsComponent },
     ]
   },
