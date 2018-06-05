@@ -1,6 +1,6 @@
 import {Question} from './question.class';
 export class Exam {
-  id:number;
+  id:string;
   name:string;
   desc:string;
   author: string;
@@ -8,11 +8,14 @@ export class Exam {
   questions:Question[]=[];
   shuffle:boolean;
   url:string;
+  creationDate:Date;
+  lastModifiedDate:Date;
   constructor(name,desc,author,viewer,shuffle){
     this.name=name;
     this.desc=desc;
     this.author=author;
     this.viewer=viewer;
     this.shuffle=shuffle;
+    this.creationDate = new Date();
   }
 }

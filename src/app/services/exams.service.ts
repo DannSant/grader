@@ -4,13 +4,18 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import 'rxjs/Rx';
 import { AngularFirestore ,AngularFirestoreCollection} from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { firebase } from '@firebase/app';
 
 @Injectable()
 export class ExamsService {
 
   dbUrl = "https://grader-14d39.firebaseio.com/exams";
   items: AngularFirestoreCollection<Exam>;
-  myExams:Exam[];
+  myExams:Exam[]=[];
+
+  public usuario:any={};
+
   // myExams:Exam[] = [
   //   {
   //     id:1,
@@ -54,34 +59,83 @@ export class ExamsService {
   //   }
   // ]
 
-  constructor(public http:HttpClient,public db: AngularFirestore) {
-
+  constructor(public http:HttpClient,public db: AngularFirestore,public afAuth: AngularFireAuth) {
+    this.afAuth.authState.subscribe(user=>{
+      //console.log(user);
+      if(!user){
+        return;
+      }
+      this.usuario.nombre = user.displayName;
+      this.usuario.uid=user.uid;
+    });
 
   }
 
-  loadExams(){
+  login(proveedor:string) {
+    if(proveedor=='google'){
+        this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    }
+
+  }
+  logout() {
+    this.usuario={};
+    this.afAuth.auth.signOut();
+  }
+
+  loadUserExams(){
+    this.myExams=[];
     this.items = this.db.collection<Exam>('exams');
-    return this.items.valueChanges().map((exams:Exam[])=>{
-      console.log(exams)
-      this.myExams=exams;
+    return this.items.snapshotChanges().map((actions)=>{
+      //console.log(actions)
+      return actions.map((a)=>{
+        //console.log(a.payload);
+        const data = a.payload.doc.data() as Exam;
+        const id = a.payload.doc.id;
+        data.id=id;
+        
+        if(data.author==this.usuario.uid){
+          this.myExams.push(data);
+        }
+
+      })
+      //this.myExams=exams;
     })
   }
 
-  saveExam(exam:Exam){
 
+  loadExams(){
+    this.myExams=[];
+    this.items = this.db.collection<Exam>('exams');
+    return this.items.snapshotChanges().map((actions)=>{
+      //console.log(actions)
+      return actions.map((a)=>{
+        //console.log(a.payload);
+        const data = a.payload.doc.data() as Exam;
+        const id = a.payload.doc.id;
+        data.id=id;
+        this.myExams.push(data);
+      })
+      //this.myExams=exams;
+    })
+  }
+
+  saveExam(exam:Exam,onSuccess,onError){
     let obj = {
       name:exam.name,
       desc:exam.desc,
       author:exam.author,
       viewer:exam.viewer,
-      shuffle:exam.shuffle
+      shuffle:exam.shuffle,
+      creationDate:exam.creationDate
     }
-
 
     this.db.collection('exams').add(obj).then((data)=>{
       let examId = data.id;
       //console.log(examId);
       for(let question of exam.questions){
+
+        let answers = question.answers;
+        let keywords = question.keywords;
         let questionObj = {
           desc:question.desc,
           orderCode:question.orderCode,
@@ -89,12 +143,30 @@ export class ExamsService {
           correctAnswerIdx:question.correctAnswerIdx
         }
         this.db.collection('exams').doc(`${examId}`).collection('questions').add(questionObj).then((questionData)=>{
+            let questionId = questionData.id;
+            let arrayToSave = question.type==1? keywords:answers;
+            let collectionToSave = question.type==1? 'keywords':'answers';
+            this.db.collection('exams').doc(`${examId}`)
+                      .collection('questions').doc(`${questionId}`)
+                        .collection(collectionToSave).add({keywords:arrayToSave}).then((kwData)=>{
+                          exam.id = examId;
+                          this.myExams.push(exam);
+                          onSuccess(examId);
+                        }).catch((e)=>{
+                          onError("Ocurrio un problema al dar de alta las ", collectionToSave);
+                          console.error(e);
+                        });
 
-            //this.db.collection('exams').doc(`${examId}`).collection('questions').doc()
-            return examId;
-        });
+
+        }).catch((e)=>{
+          onError("Ocurrio un problema al dar de alta las preguntas");
+          console.error(e);
+        })
       }
 
+    }).catch((e)=>{
+      onError("Ocurrio un problema al dar de alta el examen");
+      console.error(e);
     })
 
 

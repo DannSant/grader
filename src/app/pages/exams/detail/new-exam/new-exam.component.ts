@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import {Question,Exam} from '../../../../models/index.classes';
 import {ExamsService} from '../../../../services/exams.service';
 import {ActivatedRoute,Params} from '@angular/router'
 import {FormControl,FormGroup, Validators,FormArray} from '@angular/forms'
-
+import {AddQuestionComponent} from './add-question.component'
 import Swal from 'sweetalert2';
-
+declare var $:any;
 
 @Component({
   selector: 'app-new-exam',
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styles: []
 })
 export class NewExamComponent {
+  @ViewChild(AddQuestionComponent) questionsComponent: AddQuestionComponent;
   //Data
   exam:Exam;
   forma:FormGroup;
@@ -20,7 +21,9 @@ export class NewExamComponent {
 
   //Control
   editMode:boolean;
-
+  isLoading:boolean=false;
+  modalMsg:string="";
+  modalType:string="";
 
   constructor(private _es:ExamsService,public activatedRoute:ActivatedRoute) {
     this.forma = new FormGroup({
@@ -71,19 +74,53 @@ export class NewExamComponent {
       return;
     }
 
+    if(this._es.usuario.uid===undefined){
+      this.showAlert("Error!","No has iniciado sesion","error");
+      return;
+    }
+
+    this.isLoading=true;
+    this.modalMsg="Espere por favor, estamos procesando la solicitud...";
+    this.modalType="info";
+
     let datos = this.forma.value;
     let name = datos.name;
     let desc=datos.desc;
-    let autor = "current_user"; //obtener user desde servicio de autenticacion
+    let autor = this._es.usuario.uid //obtener user desde servicio de autenticacion
     let viewer = datos.viewer;
     let shuffle = datos.shuffle
     let newExam = new Exam(name,desc,autor,viewer,shuffle);
     newExam.questions = this.questions;
 
     //Guardar en servicio
-    let examId =this._es.saveExam(newExam);
-    console.log(examId);
+    $('#waitWindow').modal();
+    this._es.saveExam(newExam,(examId)=>{
+      this.isLoading=false;
+      console.log(examId);
+      this.modalType="success";
+      this.modalMsg="Todo bien! El examen se dio de alta con exito en la base de datos";
+      this.clearForm();
+      //this.showAlert("Todo bien!","El examen se dio de alta con exito en la base de datos","success");
+    },(error)=>{
+      this.isLoading=false;
+      this.modalMsg=error;
+      this.modalType="danger";
+      //this.showAlert("Error!",error,"error");
+    }
+  );
 
+
+  }
+
+  clearForm(){
+    this.forma.reset();
+    this.questions=[];
+    this.questionsComponent.clearQuestionForm(true);
+  }
+
+  dismissModal(){
+    //$('#waitWindow').hide();
+    $('#waitWindow').modal('toggle');
   }
 
   setViewer(viewer:string){

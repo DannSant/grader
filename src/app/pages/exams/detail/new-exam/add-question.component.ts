@@ -90,12 +90,12 @@ export class AddQuestionComponent implements OnInit {
 
   addQuestion(){
     if(this.validateAddQuestion()){
-      let newQuestion:any = new Question();
+      let newQuestion:Question = new Question();
       newQuestion.desc=this.questionDesc;
       newQuestion.orderCode=this.questionOrderCode;
       newQuestion.type=this.questionType;
       newQuestion.answers=this.questionAnswers;
-      newQuestion.keyword=this.questionKeywords;
+      newQuestion.keywords=this.questionKeywords;
       if(this.questionType==3){
           newQuestion.correctAnswerIdx = this.booleanCorrectAnswer?1:0;
       }else {
@@ -113,11 +113,17 @@ export class AddQuestionComponent implements OnInit {
     }
   }
 
-  clearQuestionForm(){
+  clearQuestionForm(reset=false){
+      console.log("clearing")
+      if(reset){
+        this.questionOrderCode=1;
+        this.questions=[];
+      }else {
+        this.questionOrderCode++;
+      }
       this.validForm=true;
       this.invalidMsg="";
       this.questionDesc="";
-      this.questionOrderCode++;
       this.questionType=0;
       this.questionAnswers=[];
       this.questionKeywords=[];

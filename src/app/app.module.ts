@@ -19,7 +19,7 @@ import { ExamsComponent } from './pages/exams/exams.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
 //Servicios
-import {ExamsService} from './services/exams.service'
+import {ExamsService} from './services/exams.service';
 
 //Rutas
 import {app_routing} from './app.routes';
@@ -62,6 +62,7 @@ import { environment } from '../environments/environment';
   ],
   providers: [
     ExamsService
+
   ],
   bootstrap: [AppComponent]
 })
