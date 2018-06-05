@@ -32,7 +32,7 @@ import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question
 
 //Archivos
 import { environment } from '../environments/environment';
-
+import {AuthGuardService} from './services/auth-guard.service'
 
 @NgModule({
   declarations: [
@@ -61,7 +61,8 @@ import { environment } from '../environments/environment';
     AngularFireAuthModule
   ],
   providers: [
-    ExamsService
+    ExamsService,
+    AuthGuardService
 
   ],
   bootstrap: [AppComponent]

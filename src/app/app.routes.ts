@@ -7,11 +7,16 @@ import {SharedExamsComponent} from './pages/exams/detail/shared-exams/shared-exa
 import {NewExamComponent} from './pages/exams/detail/new-exam/new-exam.component'
 import {ReportsComponent} from './pages/exams/detail/reports/reports.component'
 
+import {AuthGuardService} from './services/auth-guard.service'
+
 const app_routes: Routes = [
   { path: 'home', component: HomeComponent },
   {
     path: 'exams',
     component: ExamsComponent,
+    canActivate:[
+        AuthGuardService
+      ],
     children:[
       { path: 'my-exams', component: MyExamsComponent },
       { path: 'shared-exams', component: SharedExamsComponent },

@@ -6,6 +6,8 @@ import { AngularFirestore ,AngularFirestoreCollection} from 'angularfire2/firest
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { firebase } from '@firebase/app';
+//import * as admin from 'firebase-admin';
+//import * as serviceAccount from '../../accountKey.json';
 
 @Injectable()
 export class ExamsService {
@@ -16,50 +18,8 @@ export class ExamsService {
 
   public usuario:any={};
 
-  // myExams:Exam[] = [
-  //   {
-  //     id:1,
-  //     name:"Basico de Java",
-  //     desc:"Examen basico de Java de la unitec",
-  //     author:"William",
-  //     viewer:"everyone",
-  //     questions:null,
-  //     shuffle:false,
-  //     url:''
-  //   },
-  //   {
-  //     id:2,
-  //     name:"Basico de BD",
-  //     desc:"Examen basico de BD de la unitec",
-  //     author:"William",
-  //     viewer:"everyone",
-  //     questions:null,
-  //     shuffle:false,
-  //     url:''
-  //   },
-  //   {
-  //     id:3,
-  //     name:"Basico de Desarrollo Web",
-  //     desc:"Examen basico de Desarrollo web de la unitec",
-  //     author:"Larry",
-  //     viewer:"everyone",
-  //     questions:null,
-  //     shuffle:false,
-  //     url:''
-  //   },
-  //   {
-  //     id:4,
-  //     name:"Java avanzado",
-  //     desc:"Networking, sockets, interfaces y modelado",
-  //     author:"Larry",
-  //     viewer:"everyone",
-  //     questions:null,
-  //     shuffle:false,
-  //     url:''
-  //   }
-  // ]
-
   constructor(public http:HttpClient,public db: AngularFirestore,public afAuth: AngularFireAuth) {
+    //Verficar estado de autenticacion
     this.afAuth.authState.subscribe(user=>{
       //console.log(user);
       if(!user){
@@ -69,17 +29,35 @@ export class ExamsService {
       this.usuario.uid=user.uid;
     });
 
+    //Auth admin
+    // let sA:any = serviceAccount;
+    // admin.initializeApp({
+    //   credential: admin.credential.cert(sA),
+    //   databaseURL: 'https://grader-14d39.firebaseio.com'
+    // });
+
   }
 
-  login(proveedor:string) {
+  login(proveedor:string,onSuccess,onError) {
     if(proveedor=='google'){
-        this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result)=>{
+          if( result.user.uid!=undefined){
+            onSuccess();
+          }
+        }).catch((error)=>{
+          onError();
+        });
+
     }
 
   }
   logout() {
     this.usuario={};
     this.afAuth.auth.signOut();
+  }
+
+  isAuthenticated(){
+    return this.usuario.uid != undefined;
   }
 
   loadUserExams(){
@@ -92,7 +70,7 @@ export class ExamsService {
         const data = a.payload.doc.data() as Exam;
         const id = a.payload.doc.id;
         data.id=id;
-        
+
         if(data.author==this.usuario.uid){
           this.myExams.push(data);
         }

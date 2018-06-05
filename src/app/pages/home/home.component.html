@@ -11,7 +11,8 @@
   <div class="columna200">
     <a class="btn btn-primary btn-block" [routerLink]="['/about']" role="button">Más información</a>
     <br> <br>
-    <a class="btn btn-primary btn-block" href="#" role="button">Inicia sesión</a>
+    <a *ngIf="!_es.isAuthenticated()" (click)="login('google')" class="btn btn-primary btn-block" role="button">Inicia sesión</a>
+    <a *ngIf="_es.isAuthenticated()" [routerLink]="['/exams']" class="btn btn-primary btn-block" role="button">Empieza ahora!</a>
   </div>
 
 </div>
