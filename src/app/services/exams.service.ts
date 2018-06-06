@@ -12,7 +12,7 @@ import { firebase } from '@firebase/app';
 @Injectable()
 export class ExamsService {
 
-  dbUrl = "https://grader-14d39.firebaseio.com/exams";
+  dbUrl = "http://localhost:3000/exam";
   items: AngularFirestoreCollection<Exam>;
   myExams:Exam[]=[];
 
@@ -98,6 +98,19 @@ export class ExamsService {
   }
 
   saveExam(exam:Exam,onSuccess,onError){
+    let body = JSON.stringify(exam);
+    let headers = new HttpHeaders({
+      'Content-type':'application-json'
+    });
+
+    return this.http.post(this.dbUrl,body,{headers:headers}).map((resultado:any)=>{
+      console.log(resultado);
+      onSuccess("");
+      return resultado;
+    });
+  }
+
+  saveExamInFireBase(exam:Exam,onSuccess,onError){
     let obj = {
       name:exam.name,
       desc:exam.desc,

@@ -107,7 +107,9 @@ export class NewExamComponent {
       this.modalType="danger";
       //this.showAlert("Error!",error,"error");
     }
-  );
+  ).subscribe((data)=>{
+    console.log(data)
+  })
 
 
   }
