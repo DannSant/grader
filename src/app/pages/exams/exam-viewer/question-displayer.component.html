@@ -1,0 +1,34 @@
+<div class="question" *ngIf="question">
+
+<h5 class="card-title">{{question?.desc}}</h5>
+<div class="card-text">
+  <div class="abierta animated fadeIn" *ngIf="question.type==1">
+     <textarea class="form-control" id="answer1" rows="3" [(ngModel)]="openAnswer"></textarea>
+  </div>
+  <div class="multiple animated fadeIn" *ngIf="question.type==2">
+    <table class="table table-sm table-hover ">
+      <tbody>
+        <tr *ngFor="let answer of question.answers;let i = index"
+            [ngClass]="{'bg-success': optionAnswer==i}"
+            (click)="setAsCorrectAnswer(i)">
+          <th>{{i+1}}</th>
+          <td width="60%">{{answer}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="falso-verdadero animated fadeIn" *ngIf="question.type==3">
+    <div class="custom-control custom-radio">
+      <input type="radio" id="verdadero" name="verdadero" class="custom-control-input" value="true" [(ngModel)]="booleanAnswer">
+      <label class="custom-control-label" for="verdadero">Verdadero</label>
+    </div>
+    <div class="custom-control custom-radio">
+      <input type="radio" id="falso" name="falso" class="custom-control-input" value="false" [(ngModel)]="booleanAnswer">
+      <label class="custom-control-label" for="falso">Falso</label>
+    </div>
+  </div>
+</div>
+<br>
+<button (click)="nextQuestion()" class="btn btn-primary">Siguiente pregunta</button>
+
+</div>

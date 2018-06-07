@@ -35,6 +35,7 @@ import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question
 //Archivos
 import { environment } from '../environments/environment';
 import { ExamViewerComponent } from './pages/exams/exam-viewer/exam-viewer.component';
+import { QuestionDisplayerComponent } from './pages/exams/exam-viewer/question-displayer.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { ExamViewerComponent } from './pages/exams/exam-viewer/exam-viewer.compo
     NewExamComponent,
     ReportsComponent,
     AddQuestionComponent,
-    ExamViewerComponent
+    ExamViewerComponent,
+    QuestionDisplayerComponent
   ],
   imports: [
     BrowserModule,

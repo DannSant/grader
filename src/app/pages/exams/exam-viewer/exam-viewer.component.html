@@ -2,32 +2,30 @@
 
 
 
-  <div class="row">
+  <div class="row user" *ngIf="!startedExam">
     <div class="col-md-6">
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" placeholder="Nombre">
-        <label for="lastname">Nombre</label>
-        <input type="text" class="form-control" id="lastname" placeholder="Apellido">
+        <input type="text" class="form-control" id="name" placeholder="Nombre" [(ngModel)]="name">
+        <label for="lastname">Apellido</label>
+        <input type="text" class="form-control" id="lastname" placeholder="Apellido" [(ngModel)]="lastName">
       </div>
+      <button type="button" class="btn btn-outline-primary" (click)="startExam()">Iniciar</button>
     </div>
 
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          Examen Java Basico
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Que es Java?</h5>
-          <p class="card-text">
-            <input type="text" class="form-control" id="answer">
-          </p>
-          <a href="#" class="btn btn-primary">Siguiente pregunta</a>
+  <div class="exam">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            {{exam?.name}}
+          </div>
+          <div class="card-body">
+            <app-question-displayer (nextQuestionEvent)="nextQuestion($event)"></app-question-displayer>
+          </div>
         </div>
       </div>
     </div>
-</div>
-
+  </div>
 </div>

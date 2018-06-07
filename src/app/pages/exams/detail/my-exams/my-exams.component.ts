@@ -31,4 +31,8 @@ export class MyExamsComponent implements OnInit {
     });
   }
 
+  showLink(id:string){
+    this.alert.showAlert("Link",`Copiar y mandar el link: <br> http://localhost:4200/exam-viewer/${id}`,"info");
+  }
+
 }

@@ -16,7 +16,7 @@
       </td>
       <td>
         <button type="button" class="btn btn-success" [routerLink]="['../new-exam',exam._id]" routerLinkActive="active">Editar</button>
-        <button type="button" class="btn btn-info">Liga</button>
+        <button type="button" class="btn btn-info" (click)="showLink(exam._id)">Liga</button>
       </td>
     </tr>
   </tbody>
