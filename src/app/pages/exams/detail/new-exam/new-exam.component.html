@@ -77,8 +77,14 @@
   </div>
 
   <div class="col-md-3">
-    <button type="button" class="btn btn-primary btn-block btn-lg" (click)="guardarCambios()">
+    <button *ngIf="!editMode" type="button" class="btn btn-primary btn-block btn-lg" (click)="guardarCambios()">
       Guardar Examen
+    </button>
+    <button *ngIf="editMode"  type="button" class="btn btn-primary btn-block btn-lg" (click)="updateExam()">
+      Actualizar Examen
+    </button>
+    <button *ngIf="editMode"  type="button" class="btn btn-danger btn-block btn-lg" (click)="deleteExam()">
+      Borrar Examen
     </button>
   </div>
 
@@ -86,24 +92,3 @@
 <hr>
 
 <app-add-question (addQuestionEvent)="updateQuestionsArray($event)" (deleteQuestionEvent)="deleteQuestion($event)"></app-add-question>
-
-
-<div class="modal fade animated fadeIn" id="waitWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Procesando</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" style="text-align:center;">
-        <div class="alert" role="alert" [ngClass]="{'alert-success': modalType=='success','alert-danger': modalType=='danger','alert-info': modalType=='info'}">
-            <h3>{{modalMsg}} <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i></h3>
-        </div>
-        <button *ngIf="!isLoading" type="button" class="btn btn-secondary" (click)="dismissModal()">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>

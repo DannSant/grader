@@ -1,6 +1,6 @@
 import {Question} from '../../../../models/index.classes';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import Swal from 'sweetalert2';
+import {AlertService} from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-add-question',
@@ -36,7 +36,9 @@ export class AddQuestionComponent implements OnInit {
   currentAnswer:string="";
   currentKeyword:string="";
 
-  constructor() {
+  constructor(
+    public alert:AlertService
+  ) {
   this.addQuestionEvent = new EventEmitter();
   this.deleteQuestionEvent= new EventEmitter();
 }
@@ -47,6 +49,15 @@ export class AddQuestionComponent implements OnInit {
   /**
   **MANEJO DE PREGUNTAS
   **/
+
+  loadQuestions(questions:Question[],loadedOrderCode:number){
+    this.clearQuestionForm(true);
+    this.questionOrderCode=loadedOrderCode;
+    for(let question of questions){
+        this.questions.push(question);
+    }
+    //this.questions = questions;
+  }
 
   validateAddQuestion():boolean{
     let valid = true;
@@ -89,6 +100,7 @@ export class AddQuestionComponent implements OnInit {
   }
 
   addQuestion(){
+
     if(this.validateAddQuestion()){
       let newQuestion:Question = new Question();
       newQuestion.desc=this.questionDesc;
@@ -114,7 +126,7 @@ export class AddQuestionComponent implements OnInit {
   }
 
   clearQuestionForm(reset=false){
-      console.log("clearing")
+      //console.log("clearing")
       if(reset){
         this.questionOrderCode=1;
         this.questions=[];
@@ -183,22 +195,12 @@ export class AddQuestionComponent implements OnInit {
   }
 
   removeQuestion(idx){
-    Swal({
-        title: 'Estas seguro?',
-        text: 'No sera posible recuperar esta pregunta!',
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si',
-        cancelButtonText: 'No'
-      }).then((result) => {
+    this.alert.showChooseWindow( 'Estas seguro?','No sera posible recuperar esta pregunta!')
+      .then((result) => {
         if (result.value) {
           this.questions.splice(idx,1);
           this.deleteQuestionEvent.emit(idx);
-          Swal(
-            'Eliminada!',
-            'La pregunta ha sido borrada con éxito.',
-            'success'
-          )
+          this.alert.showAlert('Eliminada!','La pregunta ha sido borrada con éxito.','success')
         }
       });
   }

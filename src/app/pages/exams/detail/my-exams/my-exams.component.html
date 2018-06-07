@@ -8,37 +8,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let exam of myExams">
+    <tr *ngFor="let exam of _es.myExams">
       <td>{{exam.name}}</td>
-      <td>{{exam.desc}} - {{exam.id}}</td>
+      <td>{{exam.desc}}</td>
       <td>
          <input type="checkbox" aria-label="Checkbox for following text input" [value]="exam.shuffle">
       </td>
       <td>
-        <button type="button" class="btn btn-success" [routerLink]="['../new-exam',exam.id]" routerLinkActive="active">Editar</button>
+        <button type="button" class="btn btn-success" [routerLink]="['../new-exam',exam._id]" routerLinkActive="active">Editar</button>
         <button type="button" class="btn btn-info">Liga</button>
       </td>
     </tr>
   </tbody>
 </table>
-
-
-<div class="modal fade" id="waitWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Procesando</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" style="text-align:center;">
-        <div class="alert" role="alert" [ngClass]="{'alert-success': modalType=='success','alert-danger': modalType=='danger','alert-info': modalType=='info'}">
-            <h3>{{modalMsg}} <i class="fas fa-spinner fa-spin"></i></h3>
-        </div>
-        <!-- <button *ngIf="!isLoading" type="button" class="btn btn-secondary" (click)="dismissModal()">Cerrar</button> -->
-      </div>
-
-    </div>
-  </div>
-</div>

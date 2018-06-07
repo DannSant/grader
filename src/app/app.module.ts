@@ -20,6 +20,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 
 //Servicios
 import {ExamsService} from './services/exams.service';
+import {AuthGuardService} from './services/auth-guard.service'
+import {AlertService} from './services/alert.service'
 
 //Rutas
 import {app_routing} from './app.routes';
@@ -32,7 +34,8 @@ import { AddQuestionComponent } from './pages/exams/detail/new-exam/add-question
 
 //Archivos
 import { environment } from '../environments/environment';
-import {AuthGuardService} from './services/auth-guard.service'
+import { ExamViewerComponent } from './pages/exams/exam-viewer/exam-viewer.component';
+
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import {AuthGuardService} from './services/auth-guard.service'
     SharedExamsComponent,
     NewExamComponent,
     ReportsComponent,
-    AddQuestionComponent
+    AddQuestionComponent,
+    ExamViewerComponent
   ],
   imports: [
     BrowserModule,
@@ -62,8 +66,8 @@ import {AuthGuardService} from './services/auth-guard.service'
   ],
   providers: [
     ExamsService,
-    AuthGuardService
-
+    AuthGuardService,
+    AlertService
   ],
   bootstrap: [AppComponent]
 })

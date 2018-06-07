@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Exam,Question} from '../models/index.classes';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {RequestOptions} from '@angular/http';
 import 'rxjs/Rx';
 import { AngularFirestore ,AngularFirestoreCollection} from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
@@ -18,7 +19,10 @@ export class ExamsService {
 
   public usuario:any={};
 
-  constructor(public http:HttpClient,public db: AngularFirestore,public afAuth: AngularFireAuth) {
+  constructor(public http:HttpClient,
+              public db: AngularFirestore,
+              public afAuth: AngularFireAuth
+            ) {
     //Verficar estado de autenticacion
     this.afAuth.authState.subscribe(user=>{
       //console.log(user);
@@ -62,103 +66,169 @@ export class ExamsService {
 
   loadUserExams(){
     this.myExams=[];
-    this.items = this.db.collection<Exam>('exams');
-    return this.items.snapshotChanges().map((actions)=>{
-      //console.log(actions)
-      return actions.map((a)=>{
-        //console.log(a.payload);
-        const data = a.payload.doc.data() as Exam;
-        const id = a.payload.doc.id;
-        data.id=id;
+    let url = `${this.dbUrl}?queryType=2&uid=${this.usuario.uid}`;
 
-        if(data.author==this.usuario.uid){
-          this.myExams.push(data);
-        }
+    return this.http.get(url).map((response:any)=>{
+      //console.log(response);
+      if(response.ok){
+        this.myExams=response.data;
+      }else {
+          this.myExams=[];
+          console.error(response.error);
+      }
 
-      })
-      //this.myExams=exams;
+      let result = {ok:response.ok,data:response.data,error:"Ocurrio un error al cargar los examenes"};
+      return result;
     })
   }
 
-
-  loadExams(){
-    this.myExams=[];
-    this.items = this.db.collection<Exam>('exams');
-    return this.items.snapshotChanges().map((actions)=>{
-      //console.log(actions)
-      return actions.map((a)=>{
-        //console.log(a.payload);
-        const data = a.payload.doc.data() as Exam;
-        const id = a.payload.doc.id;
-        data.id=id;
-        this.myExams.push(data);
-      })
-      //this.myExams=exams;
-    })
-  }
-
-  saveExam(exam:Exam,onSuccess,onError){
+  saveExam(exam:Exam){
     let body = JSON.stringify(exam);
     let headers = new HttpHeaders({
       'Content-type':'application-json'
     });
-
-    return this.http.post(this.dbUrl,body,{headers:headers}).map((resultado:any)=>{
-      console.log(resultado);
-      onSuccess("");
-      return resultado;
+    //console.log(body);
+    return this.http.post(this.dbUrl,exam).map((resultado:any)=>{
+      //console.log(resultado);
+      let response = {ok:resultado.ok,examId:resultado.data._id,error:"Ocurrio un error al ejecutar al dar de alta el examen"}
+      if (resultado.error){
+        console.error(resultado.error)
+      }
+      return response;
     });
   }
 
-  saveExamInFireBase(exam:Exam,onSuccess,onError){
-    let obj = {
-      name:exam.name,
-      desc:exam.desc,
-      author:exam.author,
-      viewer:exam.viewer,
-      shuffle:exam.shuffle,
-      creationDate:exam.creationDate
-    }
+  getExamById(id:string){
+    this.myExams=[];
+    let url = `${this.dbUrl}/${id}`;
 
-    this.db.collection('exams').add(obj).then((data)=>{
-      let examId = data.id;
-      //console.log(examId);
-      for(let question of exam.questions){
-
-        let answers = question.answers;
-        let keywords = question.keywords;
-        let questionObj = {
-          desc:question.desc,
-          orderCode:question.orderCode,
-          type:question.type,
-          correctAnswerIdx:question.correctAnswerIdx
-        }
-        this.db.collection('exams').doc(`${examId}`).collection('questions').add(questionObj).then((questionData)=>{
-            let questionId = questionData.id;
-            let arrayToSave = question.type==1? keywords:answers;
-            let collectionToSave = question.type==1? 'keywords':'answers';
-            this.db.collection('exams').doc(`${examId}`)
-                      .collection('questions').doc(`${questionId}`)
-                        .collection(collectionToSave).add({keywords:arrayToSave}).then((kwData)=>{
-                          exam.id = examId;
-                          this.myExams.push(exam);
-                          onSuccess(examId);
-                        }).catch((e)=>{
-                          onError("Ocurrio un problema al dar de alta las ", collectionToSave);
-                          console.error(e);
-                        });
-
-
-        }).catch((e)=>{
-          onError("Ocurrio un problema al dar de alta las preguntas");
-          console.error(e);
-        })
+    return this.http.get(url).map((response:any)=>{
+      //console.log(response);
+      if(!response.ok){
+        console.error(response.error);
       }
 
-    }).catch((e)=>{
-      onError("Ocurrio un problema al dar de alta el examen");
-      console.error(e);
+      let result = {ok:response.ok,data:response.data,error:"Ocurrio un error al cargar los datos del examen"};
+      return result;
     })
+  }
+
+
+  updateExam(exam:Exam,id:string){
+    let url = `${this.dbUrl}/${id}`;
+    return this.http.put(url,exam).map((resultado:any)=>{
+      //console.log(resultado);
+      let response = {ok:resultado.ok,examId:resultado.data._id,error:"Ocurrio un error al ejecutar al actualizar el examen"}
+      if (resultado.error){
+        console.error(resultado.error)
+      }
+      return response;
+    });
+  }
+
+  deleteExam(exam:Exam,id:string){
+    let url = `${this.dbUrl}/delete/${id}`;
+    let options = new RequestOptions({
+       body: exam
+    })
+    return this.http.post(url,options).map((resultado:any)=>{
+      //console.log(resultado);
+      let response = {ok:resultado.ok,examId:resultado.data._id,error:"Ocurrio un error al borrar el examen"}
+      if (resultado.error){
+        console.error(resultado.error)
+      }
+      return response;
+    });
+  }
+  //
+  // loadUserExamsFromFirebase(){
+  //   this.myExams=[];
+  //   this.items = this.db.collection<Exam>('exams');
+  //   return this.items.snapshotChanges().map((actions)=>{
+  //     //console.log(actions)
+  //     return actions.map((a)=>{
+  //       //console.log(a.payload);
+  //       const data = a.payload.doc.data() as Exam;
+  //       const id = a.payload.doc.id;
+  //       data.id=id;
+  //
+  //       if(data.author==this.usuario.uid){
+  //         this.myExams.push(data);
+  //       }
+  //
+  //     })
+  //     //this.myExams=exams;
+  //   })
+  // }
+
+  //
+  // loadExams(){
+  //   this.myExams=[];
+  //   this.items = this.db.collection<Exam>('exams');
+  //   return this.items.snapshotChanges().map((actions)=>{
+  //     //console.log(actions)
+  //     return actions.map((a)=>{
+  //       //console.log(a.payload);
+  //       const data = a.payload.doc.data() as Exam;
+  //       const id = a.payload.doc.id;
+  //       data.id=id;
+  //       this.myExams.push(data);
+  //     })
+  //     //this.myExams=exams;
+  //   })
+  // }
+
+
+
+  // saveExamInFireBase(exam:Exam,onSuccess,onError){
+  //   let obj = {
+  //     name:exam.name,
+  //     desc:exam.desc,
+  //     author:exam.author,
+  //     viewer:exam.viewer,
+  //     shuffle:exam.shuffle,
+  //     creationDate:exam.creationDate
+  //   }
+  //
+  //   this.db.collection('exams').add(obj).then((data)=>{
+  //     let examId = data.id;
+  //     //console.log(examId);
+  //     for(let question of exam.questions){
+  //
+  //       let answers = question.answers;
+  //       let keywords = question.keywords;
+  //       let questionObj = {
+  //         desc:question.desc,
+  //         orderCode:question.orderCode,
+  //         type:question.type,
+  //         correctAnswerIdx:question.correctAnswerIdx
+  //       }
+  //       this.db.collection('exams').doc(`${examId}`).collection('questions').add(questionObj).then((questionData)=>{
+  //           let questionId = questionData.id;
+  //           let arrayToSave = question.type==1? keywords:answers;
+  //           let collectionToSave = question.type==1? 'keywords':'answers';
+  //           this.db.collection('exams').doc(`${examId}`)
+  //                     .collection('questions').doc(`${questionId}`)
+  //                       .collection(collectionToSave).add({keywords:arrayToSave}).then((kwData)=>{
+  //                         exam.id = examId;
+  //                         this.myExams.push(exam);
+  //                         onSuccess(examId);
+  //                       }).catch((e)=>{
+  //                         onError("Ocurrio un problema al dar de alta las ", collectionToSave);
+  //                         console.error(e);
+  //                       });
+  //
+  //
+  //       }).catch((e)=>{
+  //         onError("Ocurrio un problema al dar de alta las preguntas");
+  //         console.error(e);
+  //       })
+  //     }
+  //
+  //   }).catch((e)=>{
+  //     onError("Ocurrio un problema al dar de alta el examen");
+  //     console.error(e);
+  //   })
 
 
     // return this.http.post(this.dbUrl,body,{headers}).map((response)=>{
@@ -166,14 +236,7 @@ export class ExamsService {
     //   return response;
     // });
 
-  }
+  // }
 
-  updateExam(){
-
-  }
-
-  deleteExam(){
-
-  }
 
 }

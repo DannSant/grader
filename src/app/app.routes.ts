@@ -6,6 +6,7 @@ import {MyExamsComponent} from './pages/exams/detail/my-exams/my-exams.component
 import {SharedExamsComponent} from './pages/exams/detail/shared-exams/shared-exams.component'
 import {NewExamComponent} from './pages/exams/detail/new-exam/new-exam.component'
 import {ReportsComponent} from './pages/exams/detail/reports/reports.component'
+import {ExamViewerComponent} from './pages/exams/exam-viewer/exam-viewer.component'
 
 import {AuthGuardService} from './services/auth-guard.service'
 
@@ -24,6 +25,7 @@ const app_routes: Routes = [
       { path: 'reports', component: ReportsComponent },
     ]
   },
+  {path: 'exam-viewer/:id', component: ExamViewerComponent},
   { path: 'about', component: AboutComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
