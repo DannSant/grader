@@ -2,7 +2,7 @@
 
 
 
-  <div class="row user" *ngIf="!startedExam">
+  <div class="row user" *ngIf="!startedExam && !finishedExam">
     <div class="col-md-6">
       <div class="form-group">
         <label for="name">Nombre</label>
@@ -14,7 +14,7 @@
     </div>
 
   </div>
-  <div class="exam">
+  <div class="exam" *ngIf="!finishedExam">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
@@ -25,6 +25,23 @@
             <app-question-displayer (nextQuestionEvent)="nextQuestion($event)"></app-question-displayer>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row finish" *ngIf="finishedExam">
+    <div class="card text-center">
+      <div class="card-header">
+          {{exam?.name}}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Felicidades has terminado el examen!</h5>
+        <p class="card-text">Tu calificacion es de... <span>{{result | percent }}</span> </p>
+        <a href="#" class="btn btn-success">Enviar resultados</a>
+      </div>
+      <div class="card-footer text-muted">
+        Importante: si no haces click en Enviar resultados y sales de la página, tu resultado se perderá
       </div>
     </div>
   </div>

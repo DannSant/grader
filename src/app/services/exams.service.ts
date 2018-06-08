@@ -32,14 +32,6 @@ export class ExamsService {
       this.usuario.nombre = user.displayName;
       this.usuario.uid=user.uid;
     });
-
-    //Auth admin
-    // let sA:any = serviceAccount;
-    // admin.initializeApp({
-    //   credential: admin.credential.cert(sA),
-    //   databaseURL: 'https://grader-14d39.firebaseio.com'
-    // });
-
   }
 
   login(proveedor:string,onSuccess,onError) {
@@ -55,6 +47,7 @@ export class ExamsService {
     }
 
   }
+
   logout() {
     this.usuario={};
     this.afAuth.auth.signOut();
@@ -98,19 +91,20 @@ export class ExamsService {
     });
   }
 
-  getExamById(id:string){
+  getExamById(id:string):Observable<any>{
     this.myExams=[];
     let url = `${this.dbUrl}/${id}`;
 
     return this.http.get(url).map((response:any)=>{
-      //console.log(response);
+
       if(!response.ok){
         console.error(response.error);
       }
 
       let result = {ok:response.ok,data:response.data,error:"Ocurrio un error al cargar los datos del examen"};
       return result;
-    })
+      })
+
   }
 
 

@@ -13,8 +13,11 @@ export class ExamViewerComponent implements OnInit {
   @ViewChild(QuestionDisplayerComponent) questionDisplay:QuestionDisplayerComponent ;
   //exam data
   exam:Exam;
+  questions:Question[]=[];
   currentQuestion:Question;
   currentQuestionIndex:number;
+  userAnswers:any[]=[];
+  result:number=0;
 
   //user data
   name:string;
@@ -23,7 +26,7 @@ export class ExamViewerComponent implements OnInit {
 
   //Control
   startedExam:boolean=false;
-
+  finishedExam:boolean=false;
 
 
   constructor(private _es:ExamsService,
@@ -42,7 +45,11 @@ export class ExamViewerComponent implements OnInit {
                     }
 
                     this.exam=response.data;
+
                     this.initForm();
+                  },(error)=>{
+                    if(error.message) console.log(error.message);
+                    this.alert.showAlert("Error","Error al cargar el examen","error");
                   })
 
                 });
@@ -53,6 +60,7 @@ export class ExamViewerComponent implements OnInit {
   }
 
   initForm(){
+    this.initQuestions();
     this.startedExam=false;
     this.name="";
     this.lastName="";
@@ -61,10 +69,25 @@ export class ExamViewerComponent implements OnInit {
     this.currentQuestionIndex=0;
   }
 
+  initQuestions(){
+    this.questions = [];
+    if(this.exam.shuffle){
+        this.questions = this.shuffle(this.questions);
+    }else {
+      this.questions = this.exam.questions.sort(function(item1:Question,item2:Question){
+        return item1.orderCode - item2.orderCode;
+      });
+    }
+  }
+
   startExam(){
-      this.startedExam=true;
-      this.currentQuestionIndex=0;
-      this.setQuestion( this.currentQuestionIndex);
+    if(this.name=="" || this.name ==undefined || this.lastName=="" || this.lastName==undefined){
+      this.alert.showAlert("Error","No puedes dejar vacios nombre y apellido","error");
+      return;
+    }
+    this.startedExam=true;
+    this.currentQuestionIndex=0;
+    this.setQuestion( this.currentQuestionIndex);
   }
 
   setQuestion(idx:number){
@@ -73,9 +96,50 @@ export class ExamViewerComponent implements OnInit {
   }
 
   nextQuestion(event){
-    this.currentQuestionIndex++;
-    this.setQuestion(  this.currentQuestionIndex);
+    console.log(event);
+    this.userAnswers.push(event);
+    if(this.currentQuestionIndex>=this.exam.questions.length-1){
+      this.startedExam=false;
+      this.finishedExam=true;
+      this.setQuestion( null);
+      this.calculateResult();
+    }else {
+      this.currentQuestionIndex++;
+      this.setQuestion(  this.currentQuestionIndex);
+    }
+
   }
+
+  calculateResult(){
+    let totalQuestions = this.exam.questions.length;
+    let totalCorrects = 0;
+    for(let answer of this.userAnswers){
+      if(answer.correct){
+        totalCorrects++;
+      }
+    }
+
+    this.result = totalCorrects/totalQuestions;
+  }
+
+  shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
 
 
 
