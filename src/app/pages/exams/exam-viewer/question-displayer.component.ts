@@ -14,7 +14,7 @@ export class QuestionDisplayerComponent implements OnInit {
 
   optionAnswer:number;
   openAnswer:string;
-  booleanAnswer:boolean;
+  booleanAnswer:string;
   question:Question;
   constructor(  public alert:AlertService) {
     this.nextQuestionEvent = new EventEmitter();
@@ -51,11 +51,8 @@ export class QuestionDisplayerComponent implements OnInit {
         correct: correct
       }
     }else if(this.question.type==3){
-      invalidAnswer = (this.booleanAnswer==undefined);
-      console.log(Boolean(this.booleanAnswer));
-      console.log(Boolean(this.question.correctAnswerIdx));
-      console.log(Boolean(this.question.correctAnswerIdx==1));
-      let correct = Boolean(this.booleanAnswer) == (this.question.correctAnswerIdx==1?true:false);
+      invalidAnswer = (this.booleanAnswer==undefined);  
+      let correct = this.getBooleanCorrect();
       response = {
         id:this.question._id,
         userAnswer:this.booleanAnswer,
@@ -70,6 +67,42 @@ export class QuestionDisplayerComponent implements OnInit {
 
     this.nextQuestionEvent.emit(response);
   }
+
+  getBooleanCorrect(){
+    let correct:boolean;
+    let correctAnswer = this.question.correctAnswerIdx==1;
+    //console.log("La respuesta correcta es ",correctAnswer)
+    if(correctAnswer){
+      if(this.booleanAnswer=="true"){
+        correct=true;
+      }else {
+        correct=false;
+      }
+    }else {
+      // console.log("El usuario puso: ",this.booleanAnswer)
+      // console.log(typeof this.booleanAnswer);
+      if(this.booleanAnswer=="false"){
+        correct=true;
+      }else {
+        correct=false;
+      }
+    }
+    return correct;
+  }
+  //
+  //
+  // test(){
+  //   console.log(this.getBooleanCorrect());
+  // }
+
+  // setBooleanAnswer(value){
+  //   if(value=="1"){
+  //       this.booleanAnswer = new Boolean(true);
+  //   }else {
+  //       this.booleanAnswer = new Boolean(false);
+  //   }
+  //
+  // }
 
   setAsCorrectAnswer(idx){
     this.optionAnswer=idx;

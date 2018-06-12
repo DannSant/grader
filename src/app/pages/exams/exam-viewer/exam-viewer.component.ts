@@ -72,7 +72,9 @@ export class ExamViewerComponent implements OnInit {
   initQuestions(){
     this.questions = [];
     if(this.exam.shuffle){
-        this.questions = this.shuffle(this.questions);
+        //console.log(this.questions);
+        this.questions = this.shuffle(this.exam.questions);
+        //console.log(this.questions);
     }else {
       this.questions = this.exam.questions.sort(function(item1:Question,item2:Question){
         return item1.orderCode - item2.orderCode;
@@ -91,14 +93,14 @@ export class ExamViewerComponent implements OnInit {
   }
 
   setQuestion(idx:number){
-    this.currentQuestion=this.exam.questions[idx];
+    this.currentQuestion=this.questions[idx];
     this.questionDisplay.setupQuestion(this.currentQuestion);
   }
 
   nextQuestion(event){
-    console.log(event);
+    //console.log(event);
     this.userAnswers.push(event);
-    if(this.currentQuestionIndex>=this.exam.questions.length-1){
+    if(this.currentQuestionIndex>=this.questions.length-1){
       this.startedExam=false;
       this.finishedExam=true;
       this.setQuestion( null);
