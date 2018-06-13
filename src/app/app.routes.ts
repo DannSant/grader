@@ -2,6 +2,8 @@ import { RouterModule, Routes } from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
 import {ExamsComponent} from './pages/exams/exams.component';
 import {AboutComponent} from './pages/about/about.component';
+import {LoginComponent} from './pages/login/login.component';
+import {RegisterComponent} from './pages/login/register.component';
 import {MyExamsComponent} from './pages/exams/detail/my-exams/my-exams.component'
 import {SharedExamsComponent} from './pages/exams/detail/shared-exams/shared-exams.component'
 import {NewExamComponent} from './pages/exams/detail/new-exam/new-exam.component'
@@ -27,6 +29,8 @@ const app_routes: Routes = [
   },
   {path: 'exam-viewer/:id', component: ExamViewerComponent},
   { path: 'about', component: AboutComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
 

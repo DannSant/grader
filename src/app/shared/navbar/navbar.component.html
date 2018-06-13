@@ -21,7 +21,18 @@
       <div *ngIf="_es.usuario.uid">
           <h2><span class="badge badge-secondary">Bienvenido {{_es.usuario.nombre}}</span></h2>
       </div>
-      <button *ngIf="!_es.usuario.uid" class="btn btn-info my-2 my-sm-0" type="button" (click)="login('google')">Inicia Sesion con google <i class="fab fa-google"></i></button>
+      <button *ngIf="!_es.usuario.uid"
+               class="btn btn-info my-2 my-sm-0"
+               type="button"
+               [routerLink]="['login']"
+               routerLinkActive="active">Inicia Sesion
+     </button>
+     <button *ngIf="!_es.usuario.uid"
+              class="btn btn-info my-2 my-sm-0"
+              type="button"
+              [routerLink]="['register']"
+              routerLinkActive="active">Registrate
+    </button>
       <button *ngIf="_es.usuario.uid" class="btn btn-warning my-2 my-sm-0" type="button" (click)="logout()"> Salir</button>
     </form>
   </div>

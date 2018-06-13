@@ -1,17 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-.main-container {
-    margin-top: 40px;
-}
-
 .columna200 {
   width: 200px;
-}
-
-.answers-border {
-  border-top: 2px dashed #046ca3;
-	border-bottom: 1px dashed #046ca3;
-  box-shadow: inset 0 -1px 0 0 #046ca3, inset 0 1px 0 0 #046ca3, 0 1px 0 0 #046ca3, 0 -1px 0 0 #046ca3;
-	margin-bottom: 1px;
 }
 
 .largerCheckbox
@@ -41,6 +30,13 @@
 
 .w120{
   width: 230px;
+}
+
+.login-border {
+	border-top: 3px dotted #e5e5e5;
+	border-bottom: 3px dotted #e5e5e5;
+	box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 0 1px 0 0 #e5e5e5, 0 1px 0 0 #e5e5e5, 0 -1px 0 0 #e5e5e5;
+	margin-bottom: 1px;
 }
 
 /* Animaciones */

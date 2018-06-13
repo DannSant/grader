@@ -1,0 +1,23 @@
+<div class="container main-container login">
+  <div class="mx-auto" style="width: 400px;">
+    <div>
+      <hr>
+      <h1>Registrate en Grader</h1>
+      <hr>
+      <label for="name">Nombre</label>
+      <input type="text" name="name" id="name" class="form-control">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="form-control">
+      <label for="user">Password</label>
+      <input type="password" name="password" id="password" class="form-control">
+      <label for="user">Repetir password</label>
+      <input type="password" name="password2" id="password2" class="form-control">
+      <br>
+      <button type="button" class="btn btn-primary btn-block">Registrarse</button>
+      <hr>
+      <small>¿Ya tienes cuenta?</small>
+      <button type="button" class="btn btn-info btn-sm" [routerLink]="['/login']">Inicia sesion</button>
+      <hr>
+    </div>
+  </div>
+</div>
